@@ -10,14 +10,14 @@ website:
     sidebar:
         style: "docked"
         contents:
-          - href: map1.qmd
-            text: Map 1
-          - href: map2.qmd
-            text: Map 2
+          - href: layout.qmd
+            text: Layout
+          - href: zoning.qmd
+            text: Zoning
           - href: map3.qmd
             text: Map 3
-          - href: map4.qmd
-            text: Map 4
+          - href: map1.qmd
+            text: Disaster
             
 format:
     html:

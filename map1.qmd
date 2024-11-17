@@ -5,7 +5,7 @@ sidebar: false
 echo: false
 format:
   html:
-    page-layout: full
+    page-layout: custom
     grid:
       sidebar-width: 0px
       margin-width: 0px

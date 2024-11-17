@@ -1,0 +1,73 @@
+---
+title: ""
+navbar: false
+sidebar: false
+echo: false
+format:
+  html:
+    page-layout: custom
+    grid:
+      sidebar-width: 0px
+      margin-width: 0px
+      gutter-width: 0em
+---
+```{python}
+#| warning: false
+import geopandas as gpd
+import folium
+import numpy as np
+
+ward2roman = {
+    "千代田区": "Chiyoda",
+    "中央区": "Chuo",
+    "港区": "Minato",
+    "新宿区": "Shinjuku",
+    "文京区": "Bunkyo",
+    "台東区": "Taito",
+    "墨田区": "Sumida",
+    "江東区": "Koto",
+    "品川区": "Shinagawa",
+    "目黒区": "Meguro",
+    "大田区": "Ota",
+    "世田谷区": "Setagaya",
+    "渋谷区": "Shibuya",
+    "中野区": "Nakano",
+    "杉並区": "Suginami",
+    "豊島区": "Toshima",
+    "北区": "Kita",
+    "荒川区": "Arakawa",
+    "板橋区": "Itabashi",
+    "練馬区": "Nerima",
+    "足立区": "Adachi",
+    "葛飾区": "Katsushika",
+    "江戸川区": "Edogawa"
+}
+
+zoning = gpd.read_file("../GIS/zoning/A29-11_13.shp", encoding="Shift-JIS")
+zoning = zoning[(zoning.A29_003.str.contains("区"))]
+zoning = zoning.drop(zoning.columns[[0,1,4,7,8,9]], axis=1)
+zoning.columns = ["Ward", "Zoning Classification", "Building Coverage Ratio", "Floor Area Ratio", "geometry"]
+zoning["Ward Rom"] = zoning["Ward"].map(ward2roman)
+zoning.insert(1, "Ward Rom", zoning.pop("Ward Rom"))
+zoning.set_crs(epsg=4326, inplace=True)
+tempzon = zoning.copy()
+tempzon["Zoning Classification"][tempzon["Zoning Classification"] > 10] = np.nan 
+
+m = folium.Map([35.66, 139.74], zoom_start=11)
+
+folium.Choropleth(
+    geo_data=tempzon,
+    name="Zoning",
+    data=tempzon,
+    columns=[tempzon.index, "Zoning Classification"],
+    key_on="feature.id",
+    nan_fill_color="black",
+    nan_fill_opacity=0.4,
+    fill_color="YlGn",
+    fill_opacity=0.7,
+    line_opacity=0.3,
+    legend_name="Zoning Classification"
+).add_to(m)
+
+m
+```
