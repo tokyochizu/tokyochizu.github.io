@@ -1,0 +1,25 @@
+project:
+    type: website
+    output-dir: docs
+website:
+    navbar:
+        title: "東京地図"
+        tools:
+          - icon: github
+            href: https://www.github.com/tokyochizu
+    sidebar:
+        style: "docked"
+        contents:
+          - href: map1.qmd
+            text: Map 1
+          - href: map2.qmd
+            text: Map 2
+          - href: map3.qmd
+            text: Map 3
+          - href: map4.qmd
+            text: Map 4
+            
+format:
+    html:
+        theme: superhero
+        toc: true
