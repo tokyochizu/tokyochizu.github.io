@@ -61,7 +61,7 @@ blocks.columns = ["Ward", "Block", "Area", "geometry"]
 blocks["Ward Rom"] = blocks["Ward"].map(ward2roman)
 blocks.insert(1, "Ward Rom", blocks.pop("Ward Rom"))
 
-m = folium.Map([35.66, 139.74], zoom_start=11)
+m = folium.Map([35.65, 139.74], zoom_start=12)
 
 folium.GeoJson(
     blocks,

@@ -64,7 +64,7 @@ tempzon["Zoning Classification"][tempzon["Zoning Classification"] > 10] = np.nan
 # tempnewzon["Zoning Classification"][tempnewzon["Zoning Classification"] > 10] = np.nan 
 
 
-m = folium.Map([35.66, 139.74], zoom_start=11)
+m = folium.Map([35.65, 139.74], zoom_start=12)
 
 folium.Choropleth(
     geo_data=tempzon,

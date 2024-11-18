@@ -67,7 +67,7 @@ for k, v in chars.items():
 merged_df = blocks.merge(disaster, left_on="cityblockmerge", right_on="blockmergename", how="outer",indicator=True)
 
 
-m = folium.Map([35.66, 139.74], zoom_start=11)
+m = folium.Map([35.65, 139.74], zoom_start=12)
 bins = [1,1.9,2.9,3.9,4.9,5.9]
 folium.Choropleth(
     geo_data=merged_df,
