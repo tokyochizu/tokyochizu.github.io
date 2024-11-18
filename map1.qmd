@@ -68,39 +68,56 @@ merged_df = blocks.merge(disaster, left_on="cityblockmerge", right_on="blockmerg
 
 
 m = folium.Map([35.66, 139.74], zoom_start=11)
+bins = [1,1.9,2.9,3.9,4.9,5.9]
 folium.Choropleth(
     geo_data=merged_df,
     name="Building Risk",
     data=merged_df,
     columns=[merged_df.index, "Building Risk Grade"],
     key_on="feature.id",
+    bins=bins,
     fill_color="YlOrRd",
     fill_opacity=0.7,
     line_opacity=0.2,
-    legend_name="Building Risk Grade"
+    legend_name="Risk Grade [1-5]",
+    show=False
 ).add_to(m)
-folium.Choropleth(
+firechoro = folium.Choropleth(
     geo_data=merged_df,
     name="Fire Risk",
     data=merged_df,
     columns=[merged_df.index, "Fire Risk Grade"],
     key_on="feature.id",
+    bins=bins,
     fill_color="YlOrRd",
     fill_opacity=0.7,
     line_opacity=0.2,
-    legend_name="Fire Risk Grade"
+    legend_name="",
+    show=False
 ).add_to(m)
-folium.Choropleth(
+for key in firechoro._children:
+    if key.startswith("color_map"):
+        del(firechoro._children[key])
+
+combinedchoro = folium.Choropleth(
     geo_data=merged_df,
     name="Combined Risk",
     data=merged_df,
     columns=[merged_df.index, "Combined Risk Grade"],
     key_on="feature.id",
+    bins=bins,
     fill_color="YlOrRd",
     fill_opacity=0.7,
     line_opacity=0.2,
-    legend_name="Combined Risk Grade"
-).add_to(m)
+    legend_name="",
+    show=True
+)
+for key in combinedchoro._children:
+    if key.startswith("color_map"):
+        del(combinedchoro._children[key])
+
+firechoro.add_to(m)
+combinedchoro.add_to(m)
 folium.LayerControl().add_to(m)
 m
 

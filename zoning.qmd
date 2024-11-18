@@ -53,6 +53,17 @@ zoning.set_crs(epsg=4326, inplace=True)
 tempzon = zoning.copy()
 tempzon["Zoning Classification"][tempzon["Zoning Classification"] > 10] = np.nan 
 
+# newzoning = gpd.read_file("../GIS/zoning/", encoding="Shift-JIS")
+# newzoning = newzoning[(newzoning.A29_003.str.contains("区"))]
+# newzoning = newzoning.drop(newzoning.columns[[0,1,4,7,8,9]], axis=1)
+# newzoning.columns = ["Ward", "Zoning Classification", "Building Coverage Ratio", "Floor Area Ratio", "geometry"]
+# newzoning["Ward Rom"] = newzoning["Ward"].map(ward2roman)
+# newzoning.insert(1, "Ward Rom", newzoning.pop("Ward Rom"))
+# newzoning.set_crs(epsg=4326, inplace=True)
+# tempnewzon = newzoning.copy()
+# tempnewzon["Zoning Classification"][tempnewzon["Zoning Classification"] > 10] = np.nan 
+
+
 m = folium.Map([35.66, 139.74], zoom_start=11)
 
 folium.Choropleth(
