@@ -1,0 +1,92 @@
+---
+navbar: false
+sidebar: false
+echo: false
+format:
+  html:
+    page-layout: custom
+    grid:
+      sidebar-width: 0px
+      margin-width: 0px
+      gutter-width: 0em
+---
+```{python}
+from branca.element import Template, MacroElement
+
+def add_compass(map_obj):
+    template = """
+    {% macro html(this, kwargs) %}
+    <div style='
+        position: fixed; 
+        bottom: 8%; 
+        right: 1%; 
+        z-index:9999;'>
+        <div style='
+            width: 0;
+            height: 0;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-bottom: 50px solid black;
+            top: -50px;
+            opacity: 80%;'>
+            <div style='
+                position: absolute;
+                color: white;
+                top: 14px;
+                left: 16px;
+                font-weight: bold;
+                font-size: 20px;'>
+            N</div>
+        </div>
+        <div style='
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-top: 50px solid white;
+            opacity: 75%;
+            bottom: -50px;'>
+        </div>
+    </div>
+    {% endmacro %}
+    """
+
+    macro = MacroElement()
+    macro._template = Template(template)
+    
+    map_obj.get_root().add_child(macro)
+    return map_obj
+
+```
+```{python}
+#| warning: false
+import geopandas as gpd
+import pandas as pd
+import folium
+from shapely.geometry import Point
+
+trstations = pd.read_csv("../ASS3/station-1.csv", encoding="Shift-JIS")
+trstations = trstations.drop(trstations.columns[[2, 6, 7, 8]], axis=1)
+trstations["lines"] = 1
+
+trstations["geometry"] = trstations.apply(lambda row: Point(row["lon"], row["lat"]), axis=1)
+
+trstations = gpd.GeoDataFrame(trstations, geometry="geometry")
+was = trstations[(trstations.station_name == "早稲田")|(trstations.lon == 139.792389)].copy().reset_index()
+was.at[0,"station_name"] = "早稲田2"
+was.at[2,"station_name"] = "西浅草"
+was = was.drop(trstations.columns[[1, 2, 3, 4]], axis=1)
+
+trstations = trstations[(trstations.station_name != "早稲田")&(trstations.lon != 139.792389)].dissolve(by=
+                                                                  "station_name", aggfunc={"lines": "sum"})
+
+trstations["geometry"] = trstations["geometry"].apply(lambda geom: geom.convex_hull if geom.geom_type == "MultiPoint" else geom)
+trstations = gpd.GeoDataFrame(pd.concat([trstations.reset_index(), was], ignore_index=True))
+
+m = folium.Map([35.68, 139.74], zoom_start=13, control_scale=True)
+m = add_compass(m)
+
+
+
+```

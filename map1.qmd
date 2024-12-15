@@ -12,6 +12,54 @@ format:
       gutter-width: 0em
 ---
 ```{python}
+from branca.element import Template, MacroElement
+
+def add_compass(map_obj):
+    template = """
+    {% macro html(this, kwargs) %}
+    <div style='
+        position: fixed; 
+        bottom: 8%; 
+        right: 1%; 
+        z-index:9999;'>
+        <div style='
+            width: 0;
+            height: 0;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-bottom: 50px solid black;
+            top: -50px;
+            opacity: 80%;'>
+            <div style='
+                position: absolute;
+                color: white;
+                top: 14px;
+                left: 16px;
+                font-weight: bold;
+                font-size: 20px;'>
+            N</div>
+        </div>
+        <div style='
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-top: 50px solid white;
+            opacity: 75%;
+            bottom: -50px;'>
+        </div>
+    </div>
+    {% endmacro %}
+    """
+
+    macro = MacroElement()
+    macro._template = Template(template)
+    
+    map_obj.get_root().add_child(macro)
+    return map_obj
+```
+```{python}
 import geopandas as gpd
 import pandas as pd
 import folium
@@ -67,7 +115,8 @@ for k, v in chars.items():
 merged_df = blocks.merge(disaster, left_on="cityblockmerge", right_on="blockmergename", how="outer",indicator=True)
 
 
-m = folium.Map([35.65, 139.74], zoom_start=12)
+m = folium.Map([35.65, 139.74], zoom_start=12, control_scale=True)
+m = add_compass(m)
 bins = [1,1.9,2.9,3.9,4.9,5.9]
 folium.Choropleth(
     geo_data=merged_df,

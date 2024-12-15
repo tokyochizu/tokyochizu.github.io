@@ -14,10 +14,12 @@ website:
             text: Layout
           - href: zoning.qmd
             text: Zoning
-          - href: map3.qmd
-            text: Map 3
+          - href: trainstations.qmd
+            text: Train Station grouping
           - href: map1.qmd
             text: Disaster
+          - href: trainscore.qmd
+            text: Train Scores
             
 format:
     html:
